@@ -1,9 +1,5 @@
 import {
 	ClerkProvider,
-	SignInButton,
-	SignedIn,
-	SignedOut,
-	UserButton,
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import localFont from "next/font/local";

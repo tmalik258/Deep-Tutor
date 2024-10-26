@@ -2,10 +2,10 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const POST = async (
+export async function POST (
 	req: Request,
 	{ params }: { params: { courseId: string } }
-) => {
+) {
 	try {
 		const { userId } = auth();
 		const { url } = await req.json();
@@ -39,5 +39,3 @@ const POST = async (
 		return new NextResponse("Internal Error", { status: 500 });
 	}
 };
-
-export default POST;

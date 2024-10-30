@@ -16,8 +16,6 @@ export async function DELETE (
 	try {
 		const {userId} = auth();
 		const {courseId} = params;
-		const values = await req.json();
-		console.log('got req of saving data', values)
 
 		if (!userId) {
 			return new NextResponse("Unauthorized", {status: 401});

@@ -1,8 +1,8 @@
-// editor.tsx
 "use client";
 
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
+import type ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -11,13 +11,20 @@ interface EditorProps {
 	value: string;
 }
 
+type QuillProps = ReactQuill["props"] & {
+	forwardedRef?: React.Ref<ReactQuill>;
+};
+
 export const Editor = ({ onChange, value }: EditorProps) => {
 	const ReactQuill = useMemo(
 		() =>
 			dynamic(
 				async () => {
 					const { default: RQ } = await import("react-quill");
-					return function comp({ forwardedRef, ...props }: any) {
+					return function comp({
+						forwardedRef,
+						...props
+					}: QuillProps) {
 						return <RQ ref={forwardedRef} {...props} />;
 					};
 				},

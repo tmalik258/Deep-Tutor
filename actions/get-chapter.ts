@@ -10,7 +10,7 @@ export const getChapter = async ({
 	chapterId
 }: GetChapterProps) => {
 	try {
-		
+		console.log(userId, courseId, chapterId)
 	} catch (error) {
 		console.log("[GET_CHAPTER]", error)
 		return {

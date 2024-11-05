@@ -2,7 +2,8 @@ import {Progress} from "@/components/ui/progress";
 import {cn} from "@/lib/utils";
 interface CourseProgressProps{
 value: number;
-variant?: "default" | "sm";
+variant?: "default" | "success";
+size?: "default" | "sm";
 };
 
 const colorByVariant={
@@ -27,12 +28,11 @@ export const CourseProgress =({
             variant={variant}
             />
             <p className={cn(
-                "font-edium mt-2 text-sky-700",
+                "font-medium mt-2 text-sky-700",
                 colorByVariant[variant || "default"],
                 sizeByVariant[size || "default"],
             )}>
                 {Math.round(value)}% Complete
-
             </p>
         </div>
     )

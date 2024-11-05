@@ -1,8 +1,12 @@
 import { getChapter } from "@/actions/get-chapter";
 import Banner from "@/components/banner";
+import { Separator } from "@/components/ui/separator";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import VideoPlayer from "./_components/video-player";
+import CourseEnrollButton from "./_components/course-enroll-button";
+import { Preview } from "@/components/preview";
+import { File } from "lucide-react";
 
 const ChapterIdPage = async ({
 	params,
@@ -28,7 +32,6 @@ const ChapterIdPage = async ({
 		chapterId: params.chapterId,
 		courseId: params.courseId,
 	});
-	console.log(attachments)
 
 	if (!course || !chapter) {
 		return redirect("/");
@@ -80,15 +83,32 @@ const ChapterIdPage = async ({
 						<h2 className="text-2xl font-semibold mb-2">
 							{chapter.title}
 						</h2>
-						{/* {purchase ? (
-							// TODO: Add CourseProgressButton
+						{purchase ? (
+							<div>{/* // TODO: Add CourseProgressButton */}</div>
 						) : (
 							<CourseEnrollButton
-								courseId={params.CourseId}
-								price={course.price}
+								courseId={params.courseId}
+								price={course.price!}
 							/>
-						)} */}
+						)}
 					</div>
+					<Separator />
+					<div>
+						<Preview value={chapter.description!} />
+					</div>
+					{!!attachments.length && (
+						<>
+							<Separator />
+							<div className="p-4">
+								{attachments.map(attachment => (
+									<a href={attachment.url} target="_blank" className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline" key={attachment.id}>
+										<File />
+										<p className="line-clamp-1">{attachment.name}</p>
+									</a>
+								))}
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>

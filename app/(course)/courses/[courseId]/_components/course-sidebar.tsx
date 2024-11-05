@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Chapter, Course, UserProgress } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { CourseSidebarItem } from "./course-sidebar-item";
-import { CourseProgress } from "@/components/course-progres";
+import { CourseProgress } from "@/components/course-progress";
 interface CourseSidebarProps {
 	course: Course & {
 		chapters: (Chapter & {

@@ -4,9 +4,13 @@ import { Separator } from "@/components/ui/separator";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import VideoPlayer from "./_components/video-player";
+<<<<<<< HEAD
 import CourseEnrollButton from "./_components/course-enroll-button";
 import { Preview } from "@/components/preview";
 import { File } from "lucide-react";
+=======
+import {CourseProgressButton} from "./_components/course-progress-button";
+>>>>>>> 37eb509 (add courses functionality)
 
 const ChapterIdPage = async ({
 	params,
@@ -83,14 +87,28 @@ const ChapterIdPage = async ({
 						<h2 className="text-2xl font-semibold mb-2">
 							{chapter.title}
 						</h2>
+<<<<<<< HEAD
 						{purchase ? (
 							<div>{/* // TODO: Add CourseProgressButton */}</div>
+=======
+						{ {purchase ? (
+							<CourseProgressButton
+							chapterId={params.chapterId}
+							courseId={params.courseId}
+							nextChapterId={nextChapter?.id}
+							isCompleted={!!userProgress?.isCompleted}
+							/>
+>>>>>>> 37eb509 (add courses functionality)
 						) : (
 							<CourseEnrollButton
 								courseId={params.courseId}
 								price={course.price!}
 							/>
+<<<<<<< HEAD
 						)}
+=======
+						)} }
+>>>>>>> 37eb509 (add courses functionality)
 					</div>
 					<Separator />
 					<div>

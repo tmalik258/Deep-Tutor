@@ -21,6 +21,17 @@ export async function DELETE (
 			return new NextResponse("Unauthorized", {status: 401});
 		}
 
+		const courseOwner = await db.course.findUnique({
+			where: {
+				id: params.courseId,
+				userId: userId,
+			},
+		});
+
+		if (!courseOwner) {
+			return new NextResponse("Unauthorized", { status: 401 });
+		}
+
 		const course = await db.course.findUnique({
 			where: {
 				id: courseId,
@@ -66,10 +77,20 @@ export async function PATCH (
 		const {userId} = auth();
 		const {courseId} = params;
 		const values = await req.json();
-		console.log('got req of saving data', values)
 
 		if (!userId) {
 			return new NextResponse("Unauthorized", {status: 401});
+		}
+
+		const courseOwner = await db.course.findUnique({
+			where: {
+				id: params.courseId,
+				userId: userId,
+			},
+		});
+
+		if (!courseOwner) {
+			return new NextResponse("Unauthorized", { status: 401 });
 		}
 
 		const course = await db.course.update({

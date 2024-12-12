@@ -18,7 +18,7 @@ export async function DELETE (
 		const {courseId} = params;
 
 		if (!userId) {
-			return new NextResponse("Unauthorized", {status: 401});
+			return new NextResponse("Unauthenticated", {status: 401});
 		}
 
 		const courseOwner = await db.course.findUnique({
@@ -29,7 +29,7 @@ export async function DELETE (
 		});
 
 		if (!courseOwner) {
-			return new NextResponse("Unauthorized", { status: 401 });
+			return new NextResponse("Unauthorized", { status: 403 });
 		}
 
 		const course = await db.course.findUnique({

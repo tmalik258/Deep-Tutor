@@ -10,7 +10,7 @@ export async function PATCH (
 		const { userId } = auth();
 
 		if (!userId) {
-			return new NextResponse("Unauthorized", { status: 401 });
+			return new NextResponse("Unauthenticated", { status: 401 });
 		}
 
 		const courseOwner = await db.course.findUnique({
@@ -21,7 +21,7 @@ export async function PATCH (
 		});
 
 		if (!courseOwner) {
-			return new NextResponse("Unauthorized", { status: 401 });
+			return new NextResponse("Unauthorized", { status: 403 });
 		}
 
 		const chapter = await db.chapter.findUnique({

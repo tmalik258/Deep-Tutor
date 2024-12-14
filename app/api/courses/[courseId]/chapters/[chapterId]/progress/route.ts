@@ -12,7 +12,7 @@ export async function PUT (
         const {isCompleted} = await req.json();
 
         if (!userId) {
-            return new NextResponse("Unauthorized"  , {status: 401});
+            return new NextResponse("Unauthenticated", {status: 401});
         }
 
         const userProgress = await db.userProgress.upsert({

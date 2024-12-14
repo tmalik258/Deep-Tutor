@@ -1,8 +1,9 @@
-import { getDashboardCourses } from "@/actions/get-dashboard-courses";
-import CoursesList from "@/components/courses-list";
+import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { CheckCircle, Clock } from "lucide-react";
-import { redirect } from "next/navigation";
+
+import { getDashboardCourses } from "@/actions/get-dashboard-courses";
+import CoursesList from "@/components/courses-list";
 import InfoCard from "./_components/info-card";
 import Avatar from "@/components/Avatar";
 import AvatarCreator from "@/components/AvatarCreator";

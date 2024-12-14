@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { Category, Chapter, Course } from "@prisma/client";
 import { getProgress } from "./get-progress";
 
-type CourseWithProgressWithCategory = Course & {
+export type CourseWithProgressWithCategory = Course & {
 	category: Category;
 	chapters: Chapter[];
 	progress: number | null;

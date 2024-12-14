@@ -5,7 +5,10 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { CheckCircle, Clock } from "lucide-react";
 
-import { getDashboardCourses } from "@/actions/get-dashboard-courses";
+import {
+  getDashboardCourses,
+  CourseWithProgressWithCategory,
+} from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
 import InfoCard from "./_components/info-card";
 import Avatar from "@/components/Avatar";
@@ -18,22 +21,33 @@ import {
 } from "@/services/apiService";
 
 export default function Dashboard() {
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [completedCourses, setCompletedCourses] = useState<
+    CourseWithProgressWithCategory[]
+  >([]);
+  const [coursesInProgress, setCoursesInProgress] = useState<
+    CourseWithProgressWithCategory[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const { userId } = auth();
 
-  if (!userId) {
-    return redirect("/");
-  }
-
-  
-  const { completedCourses, coursesInProgress } = getDashboardCourses(
-    userId
-  );
-  // State to store the dynamically created avatar URL
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-
   useEffect(() => {
-    const loadAvatar = async () => {
+    // If there's no userId, we can't proceed with data fetching
+    if (!userId) {
+      setIsLoading(false);
+      return;
+    }
+
+    const loadData = async () => {
       try {
+        // Load courses first
+        const { completedCourses, coursesInProgress } =
+          await getDashboardCourses(userId);
+        setCompletedCourses(completedCourses);
+        setCoursesInProgress(coursesInProgress);
+
+        // Then load avatar
         const token = await createAnonymousUser();
         const templates = await fetchTemplates(token);
         const templateId = templates[0]?.id; // Use the first template
@@ -42,12 +56,24 @@ export default function Dashboard() {
         const finalUrl = await fetchFinalAvatar(draftAvatarId);
         setAvatarUrl(finalUrl);
       } catch (error) {
-        console.error("Error loading avatar:", error);
+        console.error("Error loading dashboard data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    loadAvatar();
-  }, []);
+    loadData();
+  }, [userId]);
+
+  // Early return for no userId
+  if (!userId) {
+    return redirect("/");
+  }
+
+  // Render loading state or content
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="p-6 space-y-4">

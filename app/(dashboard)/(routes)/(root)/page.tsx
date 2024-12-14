@@ -1,9 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { getDashboardCourses } from "@/actions/get-dashboard-courses";
-import CoursesList from "@/components/courses-list";
+import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { CheckCircle, Clock } from "lucide-react";
-import { redirect } from "next/navigation";
+
+import { getDashboardCourses } from "@/actions/get-dashboard-courses";
+import CoursesList from "@/components/courses-list";
 import InfoCard from "./_components/info-card";
 import Avatar from "@/components/Avatar";
 import {
@@ -14,15 +17,17 @@ import {
   fetchFinalAvatar,
 } from "@/services/apiService";
 
-export default async function Dashboard() {
+export default function Dashboard() {
   const { userId } = auth();
 
   if (!userId) {
     return redirect("/");
   }
 
-  const { completedCourses, coursesInProgress } = await getDashboardCourses(userId);
-
+  
+  const { completedCourses, coursesInProgress } = getDashboardCourses(
+    userId
+  );
   // State to store the dynamically created avatar URL
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -68,4 +73,3 @@ export default async function Dashboard() {
     </div>
   );
 }
-

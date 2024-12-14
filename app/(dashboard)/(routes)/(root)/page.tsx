@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 import { CheckCircle, Clock } from "lucide-react";
 
 import {
@@ -19,6 +18,7 @@ import {
   saveDraftAvatar,
   fetchFinalAvatar,
 } from "@/services/apiService";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Dashboard() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export default function Dashboard() {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { userId } = auth();
+  const { userId } = useAuth();
 
   useEffect(() => {
     // If there's no userId, we can't proceed with data fetching

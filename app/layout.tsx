@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "./globals.css";
 import ToastProvider from "@/components/providers/toast-provider";
+import { NavigationProgress } from "@/components/navigation-progress";
 
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
@@ -25,6 +26,7 @@ export default function RootLayout({
                 <body
                     className={`antialiased`}
                 >
+                    <NavigationProgress />
                     <ConfettiProvider />
                     <ToastProvider />
                     <NextSSRPlugin

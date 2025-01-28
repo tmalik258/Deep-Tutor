@@ -10,18 +10,11 @@ import {
 } from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
 import InfoCard from "./_components/info-card";
-import Avatar from "@/components/Avatar";
-import {
-  createAnonymousUser,
-  fetchTemplates,
-  createDraftAvatar,
-  saveDraftAvatar,
-  fetchFinalAvatar,
-} from "@/services/apiService";
+import { InteractiveAvatar } from "@/components/InteractiveAvatar";
 import { useAuth } from "@clerk/nextjs";
 
 export default function Dashboard() {
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  
   const [completedCourses, setCompletedCourses] = useState<
     CourseWithProgressWithCategory[]
   >([]);
@@ -47,14 +40,7 @@ export default function Dashboard() {
         setCompletedCourses(completedCourses);
         setCoursesInProgress(coursesInProgress);
 
-        // Then load avatar
-        const token = await createAnonymousUser();
-        const templates = await fetchTemplates(token);
-        const templateId = templates[0]?.id; // Use the first template
-        const draftAvatarId = await createDraftAvatar(token, templateId);
-        await saveDraftAvatar(token, draftAvatarId);
-        const finalUrl = await fetchFinalAvatar(draftAvatarId);
-        setAvatarUrl(finalUrl);
+      
       } catch (error) {
         console.error("Error loading dashboard data:", error);
       } finally {
@@ -77,7 +63,9 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-4">
+    <InteractiveAvatar />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      
         <InfoCard
           icon={Clock}
           label="In Progress"
@@ -90,12 +78,9 @@ export default function Dashboard() {
           variant="success"
         />
       </div>
+      
       <CoursesList items={[...coursesInProgress, ...completedCourses]} />
-      {avatarUrl ? (
-        <Avatar avatarUrl={avatarUrl} />
-      ) : (
-        <p>Loading your avatar...</p>
-      )}
+      
     </div>
   );
 }

@@ -19,7 +19,13 @@ export async function GET() {
     }
 
     const data = await response.json();
-    const presenters = data.presenters.map((presenter: any) => ({
+    interface Presenter {
+      presenter_id: string;
+      name: string;
+      image_url: string;
+    }
+
+    const presenters = data.presenters.map((presenter: Presenter) => ({
       presenter_id: presenter.presenter_id,
       name: presenter.name,
       image_url: presenter.image_url,

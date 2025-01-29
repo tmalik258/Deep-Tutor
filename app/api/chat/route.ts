@@ -39,8 +39,12 @@ export async function POST(req: Request) {
     const output = result.response.text(); // Extract the generated text
 
     return NextResponse.json({ response: output });
-  } catch (error: any) {
-    console.error("Error in Gemini API:", error.message || error);
+  } catch (error) {
+   let errorMessage = "An unknown error occurred";
+   if (error instanceof Error) {
+     errorMessage = error.message;
+   }
+   console.error("Error in Gemini API:", errorMessage);
     return NextResponse.json(
       { error: "Failed to process the Gemini API request." },
       { status: 500 }

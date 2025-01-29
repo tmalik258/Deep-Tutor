@@ -8,11 +8,11 @@ type ElevenLabsVoice = {
   fine_tuning: {
     is_allowed_to_fine_tune: boolean;
     state: Record<string, string>;
-    verification_failures: any[];
+    verification_failures: string[];
     verification_attempts_count: number;
     manual_verification_requested: boolean;
     language: string;
-    progress: Record<string, any>;
+    progress: Record<string, string | number | boolean>;
     message: Record<string, string>;
     dataset_duration_seconds: null;
     verification_attempts: null;
@@ -28,7 +28,7 @@ type ElevenLabsVoice = {
   };
   description: null;
   preview_url: string;
-  available_for_tiers: any[];
+  available_for_tiers: string[];
   settings: null;
   sharing: null;
   high_quality_base_model_ids: string[];
@@ -36,7 +36,7 @@ type ElevenLabsVoice = {
   voice_verification: {
     requires_verification: boolean;
     is_verified: boolean;
-    verification_failures: any[];
+    verification_failures: string[];
     verification_attempts_count: number;
     language: null;
     verification_attempts: null;

@@ -89,7 +89,7 @@ async function pollClipStatus(
   clipId: string,
   maxAttempts = 30,
   interval = 1000
-): Promise<any> {
+): Promise<{ status: string; error?: { message: string } }> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const result = await checkClipStatus(clipId);
 

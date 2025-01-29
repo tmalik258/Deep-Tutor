@@ -178,12 +178,19 @@ export function InteractiveAvatar() {
   async function handleTranscription(audioBlob: Blob) {
     try {
       const transcription = await transcribeAudio(audioBlob);
+      if (!transcription)
+        throw new Error("Received empty transcription from Gemini API.");
+
       setChatText(transcription);
       clearError();
       await handleChatSubmit(transcription);
     } catch (err) {
       console.error(err);
-      setError("Failed to transcribe audio. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to transcribe audio. Please try again."
+      );
     }
   }
 
@@ -214,7 +221,7 @@ export function InteractiveAvatar() {
         <CardFooter className="flex flex-col gap-3">
           <div className="flex gap-2 w-full">
             <Select
-              label="Select Avatar"
+              label=""
               placeholder="Choose an avatar"
               selectedKeys={avatarId ? [avatarId] : []}
               onChange={(e) => setAvatarId(e.target.value)}
@@ -231,7 +238,6 @@ export function InteractiveAvatar() {
               ))}
             </Select>
             <Select
-              
               placeholder="Choose a voice"
               selectedKeys={voiceId ? [voiceId] : []}
               onChange={(e) => setVoiceId(e.target.value)}
@@ -256,7 +262,7 @@ export function InteractiveAvatar() {
           />
           <TextInput
             label=""
-            placeholder="Chat with the avatar (uses ChatGPT)"
+            placeholder="Chat with the avatar (using gemini)"
             input={chatText}
             onSubmit={() => handleChatSubmit(chatText)}
             setInput={setChatText}

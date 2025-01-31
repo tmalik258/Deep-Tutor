@@ -49,6 +49,7 @@
 		"next": "^14.2.20",
 		"next-themes": "^0.3.0",
 		"openai": "^4.56.1",
+		"pdf-parse": "^1.1.1",
 		"query-string": "^9.1.1",
 		"react": "^18.3.1",
 		"react-confetti": "^6.1.0",

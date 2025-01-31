@@ -10,9 +10,9 @@ import {
   SelectItem,
   CardFooter,
 } from "@nextui-org/react";
-import clsx from "clsx";
 import { useTheme } from "next-themes";
-import { Play, Microphone } from "@phosphor-icons/react";
+import { Microphone, Play } from "@phosphor-icons/react";
+import pdfParse from "pdf-parse"; // Import pdf-parse to extract text from PDF
 
 import { Presenter, Voice } from "@/types";
 import { transcribeAudio } from "@/utils/openai";
@@ -22,15 +22,18 @@ import { useErrorHandler } from "@/utils/useErrorHandler";
 import { speakWithAvatar } from "@/utils/speakWithAvatar";
 import { startRecording, stopRecording } from "@/utils/audioRecording";
 
-export function InteractiveAvatar() {
+interface InteractiveAvatarProps {
+  pdfContent: string; // PDF URL passed as a prop
+}
+
+export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState({
     chat: false,
-    repeat: false,
+    reading: false, // Loading state for reading PDF
     presenters: true,
     voices: true,
   });
-  const [repeatText, setRepeatText] = useState("");
   const [chatText, setChatText] = useState("");
   const [avatarId, setAvatarId] = useState("");
   const [recording, setRecording] = useState(false);
@@ -38,6 +41,7 @@ export function InteractiveAvatar() {
   const [voiceId, setVoiceId] = useState("iP95p4xoKVk53GoZ742B"); // Default: Elevenlabs > Chris
   const [voices, setVoices] = useState<Voice[]>([]);
   const [presenters, setPresenters] = useState<Presenter[]>([]);
+  const [pdfText, setPdfText] = useState<string>(""); // State to store extracted PDF text
 
   const { error, setError, clearError } = useErrorHandler();
 
@@ -49,6 +53,71 @@ export function InteractiveAvatar() {
   useEffect(() => {
     setVideoUrl(null);
   }, [avatarId]);
+
+  // Extract text from PDF when the component mounts
+  useEffect(() => {
+    if (pdfContent) {
+      fetch(pdfContent)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const pdfData = new Uint8Array(reader.result as ArrayBuffer);
+            pdfParse(pdfData).then((data) => {
+              setPdfText(data.text); // Store the extracted text
+            });
+          };
+          reader.readAsArrayBuffer(blob);
+        })
+        .catch((err) => {
+          console.error("Error fetching or parsing PDF:", err);
+          setError("Failed to load PDF content. Please try again.");
+        });
+    }
+  }, [pdfContent]);
+
+  // Function to handle reading the PDF content
+  const handleReadPdf = async () => {
+    if (!pdfText) {
+      setError("No PDF content available to read.");
+      return;
+    }
+
+    setIsLoading((prev) => ({ ...prev, reading: true }));
+
+    try {
+      const selectedPresenter = presenters.find(
+        (p) => p.presenter_id === avatarId
+      );
+
+      if (!selectedPresenter) {
+        setError("Selected presenter not found");
+        return;
+      }
+
+      // Speak the PDF content using the avatar
+      const result = await speakWithAvatar({
+        text: pdfText,
+        presenterId: selectedPresenter.presenter_id,
+        voiceId,
+        bgColor: theme === "dark" ? "#18181b" : "#F3F4F6",
+      });
+
+      if (!result.result_url) {
+        throw new Error("Failed to get video URL from D-ID");
+      }
+
+      setVideoUrl(result.result_url);
+      clearError();
+    } catch (err) {
+      console.error(err);
+      setError(
+        err instanceof Error ? err.message : "Failed to make avatar speak"
+      );
+    } finally {
+      setIsLoading((prev) => ({ ...prev, reading: false }));
+    }
+  };
 
   async function handleChatSubmit(userInput: string) {
     if (!userInput.trim()) {
@@ -72,7 +141,7 @@ export function InteractiveAvatar() {
       }
 
       const data = await response.json();
-      await handleSpeakWithAvatar(data.response);
+      await handleSpeakWithAvatar(data.response); // Make the avatar speak the response
     } catch (err) {
       console.error(err);
       setError(
@@ -85,8 +154,6 @@ export function InteractiveAvatar() {
   }
 
   async function handleSpeakWithAvatar(text: string) {
-    setIsLoading((prev) => ({ ...prev, repeat: true }));
-
     try {
       const selectedPresenter = presenters.find(
         (p) => p.presenter_id === avatarId
@@ -115,9 +182,6 @@ export function InteractiveAvatar() {
       setError(
         err instanceof Error ? err.message : "Failed to make avatar speak"
       );
-    } finally {
-      setIsLoading((prev) => ({ ...prev, repeat: false }));
-      setRepeatText("");
     }
   }
 
@@ -183,7 +247,7 @@ export function InteractiveAvatar() {
 
       setChatText(transcription);
       clearError();
-      await handleChatSubmit(transcription);
+      await handleChatSubmit(transcription); // Send transcribed text to Gemini
     } catch (err) {
       console.error(err);
       setError(
@@ -251,18 +315,19 @@ export function InteractiveAvatar() {
               ))}
             </Select>
           </div>
+          {/* Button to read the PDF content */}
+          <Button
+            onClick={handleReadPdf}
+            disabled={isAnyLoading || !pdfText}
+            isLoading={isLoading.reading}
+            className="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
+          >
+            {isLoading.reading ? "Reading..." : "Read Chapter PDF"}
+          </Button>
+          {/* Text input for chatting with Gemini */}
           <TextInput
             label=""
-            placeholder="Type something for the avatar to repeat"
-            input={repeatText}
-            onSubmit={() => handleSpeakWithAvatar(repeatText)}
-            setInput={setRepeatText}
-            loading={isLoading.repeat}
-            disabled={isAnyLoading}
-          />
-          <TextInput
-            label=""
-            placeholder="Chat with the avatar (using gemini)"
+            placeholder="Ask a question about the chapter"
             input={chatText}
             onSubmit={() => handleChatSubmit(chatText)}
             setInput={setChatText}

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -21,6 +22,7 @@ import { AvatarVideo } from "@/components/AvatarVideo";
 import { useErrorHandler } from "@/utils/useErrorHandler";
 import { speakWithAvatar } from "@/utils/speakWithAvatar";
 import { startRecording, stopRecording } from "@/utils/audioRecording";
+import Image from "next/image";
 import clsx from "clsx";
 
 interface InteractiveAvatarProps {
@@ -276,10 +278,11 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
             ) : videoUrl ? (
               <AvatarVideo videoUrl={videoUrl} />
             ) : selectedPresenter ? (
-              <img
+              <Image
                 src={selectedPresenter.image_url}
                 alt={selectedPresenter.name}
                 className="w-full h-full rounded-lg object-contain"
+                fill
               />
             ) : null}
           </div>

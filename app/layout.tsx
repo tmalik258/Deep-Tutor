@@ -1,38 +1,36 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import "./globals.css";
-import ToastProvider from "@/components/providers/toast-provider";
-
+import NextTopLoader from "nextjs-toploader";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
+
+import ToastProvider from "@/components/providers/toast-provider";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ConfettiProvider } from "@/components/providers/confetti-provider";
 
+import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Deep Tutor",
-    description: "Your Real-Time Virtual Educational Assistance",
+  title: "Deep Tutor",
+  description: "Your Real-Time Virtual Educational Assistant",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <ClerkProvider>
-            <html lang="en">
-                <body
-                    className={`antialiased`}
-                >
-                    <ConfettiProvider />
-                    <ToastProvider />
-                    <NextSSRPlugin
-                        routerConfig={extractRouterConfig(ourFileRouter)}
-                    />
-                    {children}
-                </body>
-            </html>
-        </ClerkProvider>
-    );
+  return (
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`antialiased`}>
+          <ConfettiProvider />
+          <NextTopLoader />
+          <ToastProvider />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
+  );
 }

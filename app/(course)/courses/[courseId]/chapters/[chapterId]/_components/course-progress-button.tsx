@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import { useState } from "react";
 import toast from "react-hot-toast";

@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import MuxPlayer from "@mux/mux-player-react";
 import { Loader2, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { useState } from "react";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import { toast } from "react-hot-toast";

@@ -60,53 +60,60 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
 	};
 
 	return (
-		<div className="mt-6 border bg-slate-100 rounded-md p-4">
-			<div className="font-medium flex item-center justify-between">
-				Course description
-				<Button onClick={toggleEdit} variant={"ghost"}>
-					{isEditing ? (
-						<>Cancel</>
-					) : (
-						<>
-							<Pencil className="h-3 w-3 mr-2" />
-							Edit description
-						</>
-					)}
-				</Button>
-			</div>
-			{!isEditing && (
-				<p className={cn(
-					"text-sm mt-2",
-					!initialData.description && "text-slate-500 italic"
-				)}>
-					{initialData.description || "No description"}
-				</p>
-			)}
-			{isEditing && (
-				<Form {...form} >
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-						<FormField
-							control={form.control}
-							name="description"
-							render={({field}) => (
-								<FormItem>
-									<FormControl>
-										<Textarea
-											disabled={isSubmitting}
-											placeholder="e.g., 'This course is about...'"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div className="flex items-center gap-x-2">
-							<Button disabled={!isValid || isSubmitting} type="submit">Save</Button>
-						</div>
-					</form>
-				</Form>
-			)}
-		</div>
-	);
+    <div className="mt-6 bg-white shadow-xl rounded-xl p-4">
+      <div className="font-medium flex item-center justify-between">
+        Course description
+        <Button onClick={toggleEdit} variant={"ghost"}>
+          {isEditing ? (
+            <>Cancel</>
+          ) : (
+            <>
+              <Pencil className="h-3 w-3 mr-2" />
+              Edit description
+            </>
+          )}
+        </Button>
+      </div>
+      {!isEditing && (
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !initialData.description && "text-slate-500 italic"
+          )}
+        >
+          {initialData.description || "No description"}
+        </p>
+      )}
+      {isEditing && (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 mt-4"
+          >
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      disabled={isSubmitting}
+                      placeholder="e.g., 'This course is about...'"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex items-center gap-x-2">
+              <Button disabled={!isValid || isSubmitting} type="submit">
+                Save
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
+    </div>
+  );
 };

@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -12,7 +13,6 @@ import {
 } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { Microphone, Play } from "@phosphor-icons/react";
-import pdfParse from "pdf-parse"; // Import pdf-parse to extract text from PDF
 
 import { Presenter, Voice } from "@/types";
 import { transcribeAudio } from "@/utils/openai";
@@ -21,6 +21,7 @@ import { AvatarVideo } from "@/components/AvatarVideo";
 import { useErrorHandler } from "@/utils/useErrorHandler";
 import { speakWithAvatar } from "@/utils/speakWithAvatar";
 import { startRecording, stopRecording } from "@/utils/audioRecording";
+import clsx from "clsx";
 
 interface InteractiveAvatarProps {
   pdfContent: string; // PDF URL passed as a prop
@@ -54,24 +55,26 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
     setVideoUrl(null);
   }, [avatarId]);
 
-  // Extract text from PDF when the component mounts
+  // Fetch PDF text from the API route
   useEffect(() => {
     if (pdfContent) {
-      fetch(pdfContent)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const pdfData = new Uint8Array(reader.result as ArrayBuffer);
-            pdfParse(pdfData).then((data) => {
-              setPdfText(data.text); // Store the extracted text
-            });
-          };
-          reader.readAsArrayBuffer(blob);
+      setIsLoading((prev) => ({ ...prev, reading: true }));
+      fetch("/api/parse-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pdfUrl: pdfContent }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setPdfText(data.text);
+          clearError();
         })
         .catch((err) => {
-          console.error("Error fetching or parsing PDF:", err);
+          console.error("Error fetching PDF text:", err);
           setError("Failed to load PDF content. Please try again.");
+        })
+        .finally(() => {
+          setIsLoading((prev) => ({ ...prev, reading: false }));
         });
     }
   }, [pdfContent]);

@@ -2,7 +2,8 @@
 
 import qs from "query-string";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { IconType } from "react-icons/lib";
 
 interface CategoryItemProps {

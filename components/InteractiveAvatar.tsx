@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Card,
   Select,
@@ -27,7 +27,7 @@ import clsx from "clsx";
 
 interface InteractiveAvatarProps {
   pdfContent: string; // PDF URL passed as a prop
-}
+};
 
 export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
   const { theme } = useTheme();
@@ -48,10 +48,49 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
 
   const { error, setError, clearError } = useErrorHandler();
 
+  const fetchVoices = useCallback(async () => {
+    try {
+      const response = await fetch("/api/voices");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch voices");
+      }
+
+      const data = await response.json();
+      setVoices(data.voices);
+    } catch (error) {
+      console.error("Error fetching voices:", error);
+      setError("Failed to fetch voices. Please try again.");
+    } finally {
+      setIsLoading((prev) => ({ ...prev, voices: false }));
+    }
+  }, [setError]);
+
+  const fetchPresenters = useCallback(async () => {
+    try {
+      const response = await fetch("/api/presenters");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch presenters");
+      }
+
+      const data: Presenter[] = await response.json();
+      setPresenters(data);
+
+      const initialPresenter = data.find((p) => p.name === "matt") || data[0];
+      setAvatarId(initialPresenter.presenter_id);
+    } catch (err) {
+      console.error("Error fetching presenters:", err);
+      setError("Failed to fetch presenters. Please try again.");
+    } finally {
+      setIsLoading((prev) => ({ ...prev, presenters: false }));
+    }
+  }, [setError]);
+
   useEffect(() => {
     fetchVoices();
     fetchPresenters();
-  }, []);
+  }, [fetchPresenters, fetchVoices]);
 
   useEffect(() => {
     setVideoUrl(null);
@@ -79,7 +118,7 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
           setIsLoading((prev) => ({ ...prev, reading: false }));
         });
     }
-  }, [pdfContent]);
+  }, [clearError, pdfContent, setError]);
 
   // Function to handle reading the PDF content
   const handleReadPdf = async () => {
@@ -187,45 +226,6 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
       setError(
         err instanceof Error ? err.message : "Failed to make avatar speak"
       );
-    }
-  }
-
-  async function fetchVoices() {
-    try {
-      const response = await fetch("/api/voices");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch voices");
-      }
-
-      const data = await response.json();
-      setVoices(data.voices);
-    } catch (error) {
-      console.error("Error fetching voices:", error);
-      setError("Failed to fetch voices. Please try again.");
-    } finally {
-      setIsLoading((prev) => ({ ...prev, voices: false }));
-    }
-  }
-
-  async function fetchPresenters() {
-    try {
-      const response = await fetch("/api/presenters");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch presenters");
-      }
-
-      const data: Presenter[] = await response.json();
-      setPresenters(data);
-
-      const initialPresenter = data.find((p) => p.name === "matt") || data[0];
-      setAvatarId(initialPresenter.presenter_id);
-    } catch (err) {
-      console.error("Error fetching presenters:", err);
-      setError("Failed to fetch presenters. Please try again.");
-    } finally {
-      setIsLoading((prev) => ({ ...prev, presenters: false }));
     }
   }
 

@@ -6,58 +6,58 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import toast from "react-hot-toast";
 
 interface TitleFormProps {
-	initialData: {
-		title: string;
-	};
-	courseId: string;
+  initialData: {
+    title: string;
+  };
+  courseId: string;
 }
 
 const formSchema = z.object({
-	title: z.string().min(1, {
-		message: "Title is required",
-	}),
+  title: z.string().min(1, {
+    message: "Title is required",
+  }),
 });
 
 export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
-	const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-	const toggleEdit = () => setIsEditing(current => !current);
+  const toggleEdit = () => setIsEditing((current) => !current);
 
-	const router = useRouter()
+  const router = useRouter();
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: initialData,
-	});
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData,
+  });
 
-	const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting, isValid } = form.formState;
 
-	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		try {
-			await axios.patch(`/api/courses/${courseId}`, values);
-			toast.success('Course updated');
-			toggleEdit();
-			router.refresh();
-		} catch {
-			toast.error('Something went wrong')
-		}
-	};
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await axios.patch(`/api/courses/${courseId}`, values);
+      toast.success("Course updated");
+      toggleEdit();
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
 
-	return (
+  return (
     <div className="mt-6 bg-white shadow-xl rounded-xl p-4">
       <div className="font-medium flex item-center justify-between">
         Course title{" "}

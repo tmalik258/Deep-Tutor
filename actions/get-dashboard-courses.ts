@@ -38,6 +38,7 @@ export const getDashboardCourses = async (userId: string): Promise<DashboardCour
 		for (const course of courses) {
 			const progress = await getProgress(userId, course.id);
 			course["progress"] = progress;
+			console.log(course["progress"])
 		}
 
 		const completedCourses = courses.filter(course => course.progress === 100);

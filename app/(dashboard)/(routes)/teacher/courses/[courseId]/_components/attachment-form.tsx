@@ -6,7 +6,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { File, Loader2, PlusCircle, X } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import toast from "react-hot-toast";
 import { Attachment, Course } from "@prisma/client";
 import FileUpload from "@/components/file-upload";

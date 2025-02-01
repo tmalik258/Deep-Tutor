@@ -10,7 +10,7 @@ interface InfoCardProps {
 
 const InfoCard = ({ variant, icon: Icon, numberOfItems, label }: InfoCardProps) => {
 	return (
-		<div className="border rounded-md flex items-center gap-x-2 p-3">
+		<div className="shadow-xl rounded-xl bg-white flex items-center gap-x-2 p-3">
 			<IconBadge variant={variant} icon={Icon} />
 			<div>
 				<p className="font-medium">

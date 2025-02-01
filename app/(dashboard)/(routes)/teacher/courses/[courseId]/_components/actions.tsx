@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 
 interface ActionsProps {

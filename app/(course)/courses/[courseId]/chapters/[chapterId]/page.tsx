@@ -8,7 +8,7 @@ import CourseEnrollButton from "./_components/course-enroll-button";
 import { Preview } from "@/components/preview";
 import { File } from "lucide-react";
 import { CourseProgressButton } from "./_components/course-progress-button";
-import {InteractiveAvatar} from "@/components/InteractiveAvatar"; // Import the InteractiveAvatar component
+import InteractiveAvatar from "@/components/InteractiveAvatar"; // Import the InteractiveAvatar component
 
 const ChapterIdPage = async ({
   params,

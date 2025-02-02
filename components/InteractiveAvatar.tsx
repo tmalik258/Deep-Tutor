@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import axios from "axios";
 import {
   Card,
   Select,
@@ -25,11 +27,16 @@ import { startRecording, stopRecording } from "@/utils/audioRecording";
 import Image from "next/image";
 import clsx from "clsx";
 
+// Set the worker source
+GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+
+
 interface InteractiveAvatarProps {
   pdfContent: string; // PDF URL passed as a prop
 };
 
-export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
+const InteractiveAvatar = ({ pdfContent }: InteractiveAvatarProps) => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState({
     chat: false,
@@ -96,29 +103,48 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
     setVideoUrl(null);
   }, [avatarId]);
 
-  // Fetch PDF text from the API route
   useEffect(() => {
-    if (pdfContent) {
-      setIsLoading((prev) => ({ ...prev, reading: true }));
-      fetch("/api/parse-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdfUrl: pdfContent }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setPdfText(data.text);
-          clearError();
-        })
-        .catch((err) => {
-          console.error("Error fetching PDF text:", err);
-          setError("Failed to load PDF content. Please try again.");
-        })
-        .finally(() => {
-          setIsLoading((prev) => ({ ...prev, reading: false }));
+    const parsePdf = async (pdfUrl: string) => {
+      try {
+        // Fetch PDF as ArrayBuffer
+        const response = await axios.get(pdfUrl, {
+          responseType: "arraybuffer", // This is crucial
         });
+
+        console.log(response)
+
+        // Initialize PDF.js
+        const loadingTask = getDocument({
+          data: new Uint8Array(response.data),
+          // For CORS issues, add:
+          // cMapUrl: "https://unpkg.com/pdfjs-dist@3.11.174/cmaps/",
+          // cMapPacked: true
+        });
+
+        const pdf = await loadingTask.promise;
+        let text = "";
+
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const content = await page.getTextContent();
+          text += content.items
+            .filter((item) => "str" in item)
+            .map((item) => item.str)
+            .join(" ");
+        }
+
+        console.log("Extracted text:", text);
+        // setPdfText(text);
+      } catch (err) {
+        console.error("Failed to parse PDF:", err);
+        setError("Failed to parse PDF");
+      }
+    };
+
+    if (pdfContent) {
+      parsePdf(pdfContent);
     }
-  }, []);
+  }, [pdfContent]);
 
   // Function to handle reading the PDF content
   const handleReadPdf = async () => {
@@ -378,3 +404,5 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
     </div>
   );
 }
+
+export default InteractiveAvatar

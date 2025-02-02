@@ -54,13 +54,8 @@ const ChapterIdPage = async ({
     );
   }
 
-  // Check if the current chapter is Chapter 1
-  const isChapter1 = params.chapterId === "chapter-1-id"; // Replace "chapter-1-id" with the actual ID of Chapter 1
-
   // Get the PDF content from the attachments
-  const pdfAttachment = attachments.find((attachment) =>
-    attachment.name.endsWith(".pdf")
-  );
+  const pdfAttachment = attachments ? attachments[0] : null;
 
   return (
     <div>
@@ -78,7 +73,7 @@ const ChapterIdPage = async ({
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
-          <VideoPlayer
+          {/* <VideoPlayer
             chapterId={params.chapterId}
             title={chapter.title}
             courseId={params.courseId}
@@ -86,7 +81,7 @@ const ChapterIdPage = async ({
             playbackId={muxData.playbackId}
             isLocked={isLocked}
             completeOnEnd={completeOnEnd}
-          />
+          /> */}
         </div>
         <div>
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">
@@ -133,7 +128,7 @@ const ChapterIdPage = async ({
           )}
         </div>
         {/* Render the InteractiveAvatar component for Chapter 1 */}
-        {isChapter1 && pdfAttachment && (
+        {pdfAttachment && (
           <div className="p-4">
             <InteractiveAvatar pdfContent={pdfAttachment.url} />
           </div>

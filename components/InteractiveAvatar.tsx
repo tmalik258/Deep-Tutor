@@ -64,7 +64,7 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
     } finally {
       setIsLoading((prev) => ({ ...prev, voices: false }));
     }
-  }, [setError]);
+  }, []);
 
   const fetchPresenters = useCallback(async () => {
     try {
@@ -85,12 +85,12 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
     } finally {
       setIsLoading((prev) => ({ ...prev, presenters: false }));
     }
-  }, [setError]);
+  }, []);
 
   useEffect(() => {
     fetchVoices();
     fetchPresenters();
-  }, [fetchPresenters, fetchVoices]);
+  }, []);
 
   useEffect(() => {
     setVideoUrl(null);
@@ -118,7 +118,7 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
           setIsLoading((prev) => ({ ...prev, reading: false }));
         });
     }
-  }, [clearError, pdfContent, setError]);
+  }, []);
 
   // Function to handle reading the PDF content
   const handleReadPdf = async () => {
@@ -323,7 +323,7 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
           </div>
           {/* Button to read the PDF content */}
           <Button
-            onClick={handleReadPdf}
+            onPress={handleReadPdf}
             disabled={isAnyLoading || !pdfText}
             isLoading={isLoading.reading}
             className="mt-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
@@ -349,7 +349,7 @@ export function InteractiveAvatar({ pdfContent }: InteractiveAvatarProps) {
                     "mr-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500",
                     recording && "animate-pulse"
                   )}
-                  onClick={
+                  onPress={
                     !recording ? handleStartRecording : handleStopRecording
                   }
                   disabled={isAnyLoading}

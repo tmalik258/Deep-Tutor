@@ -23,7 +23,7 @@ const NavbarRoutes = () => {
 					<SearchInput />
 				</div>
 			)}
-			<div className="flex gap-x-2 ml-auto">
+			<div className="flex gap-x-3 ml-auto">
 				{
 					isTeacherPage || isCoursePage ? (
 						<Link href="/dashboard">
@@ -34,7 +34,7 @@ const NavbarRoutes = () => {
 						</Link>
 					) : isTeacher(userId) ? (
 						<Link href="/dashboard/teacher/courses">
-							<Button size="sm" variant={"ghost"}>
+							<Button size="sm" variant={"outline"}>
 								Teacher Mode
 							</Button>
 						</Link>

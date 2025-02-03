@@ -5,30 +5,30 @@ import SidebarItem from "./sidebar-item";
 import { usePathname } from "next/navigation";
 
 const guestRoutes = [
-	{
-		icon: Layout,
-		label: "Dashboard",
-		href: "/",
-	},
-	{
-		icon: Compass,
-		label: "Browse",
-		href: "/search",
-	},
+  {
+    icon: Layout,
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    icon: Compass,
+    label: "Browse",
+    href: "/dashboard/search",
+  },
 ];
 
 const teacherRoutes = [
-	{
-		icon: List,
-		label: "Courses",
-		href: "/teacher/courses",
-	},
-	{
-		icon: BarChart,
-		label: "Analytics",
-		href: "/teacher/analytics",
-	},
-]
+  {
+    icon: List,
+    label: "Courses",
+    href: "/dashboard/teacher/courses",
+  },
+  {
+    icon: BarChart,
+    label: "Analytics",
+    href: "/dashboard/teacher/analytics",
+  },
+];
 
 const SidebarRoutes = () => {
 	const pathname = usePathname();

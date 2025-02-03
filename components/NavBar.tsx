@@ -1,39 +1,82 @@
 "use client";
+import { UserButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion"; // Import motion
+import Image from "next/image";
 
-import {
-  Link,
-  Navbar,
-  NavbarItem,
-  NavbarBrand,
-  NavbarContent,
-} from "@nextui-org/react";
+const Navbar = () => {
+  const { isSignedIn } = useUser();
+  const [isMounted, setIsMounted] = useState(false);
 
-import { GithubIcon } from "./Icons";
-import { ThemeSwitch } from "./ThemeSwitch";
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-export function NavBar() {
+  if (!isMounted) return null;
+
   return (
-    <Navbar className="w-[900px] h-12 mx-auto">
-      <NavbarBrand>
-        <div className="ml-4">
-          <p className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-            D-ID Starter Kit
-          </p>
+    <motion.nav
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        delay: 0.2,
+      }}
+      className="fixed top-5 left-5 right-5 inset-x-0 bg-white rounded-lg shadow-xl z-50"
+    >
+      <div className="mx-auto px-6 md:px-12 py-2 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src={"/logo.svg"} height={30} width={130} alt={"logo"} />
+        </Link>
+
+        <div className="flex items-center gap-4">
+          {isSignedIn ? (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  className="border-gray-300 text-gray-600"
+                >
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton />
+            </>
+          ) : (
+            <>
+              <SignUpButton>
+                <Button
+                  variant="outline"
+                  className="border-gray-300 text-gray-600"
+                >
+                  Sign Up
+                </Button>
+              </SignUpButton>
+              <SignInButton>
+                <Button className="bg-gray-900 text-white hover:bg-gray-800">
+                  Sign In
+                </Button>
+              </SignInButton>
+            </>
+          )}
         </div>
-      </NavbarBrand>
-      <NavbarContent justify="center">
-        <NavbarItem className="flex flex-row items-center gap-4">
-          <Link
-            isExternal
-            aria-label="Github"
-            href="https://github.com/WillKre/nextjs-whisper-d-id"
-            className="flex flex-row justify-center gap-1 text-foreground"
-          >
-            <GithubIcon className="text-default-500" />
-          </Link>
-          <ThemeSwitch />
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+      </div>
+    </motion.nav>
   );
-}
+};
+
+
+// Add these at the bottom of your file
+const SignInButton = ({ children }: { children: React.ReactNode }) => (
+  <Link href="/sign-in">{children}</Link>
+);
+
+const SignUpButton = ({ children }: { children: React.ReactNode }) => (
+  <Link href="/sign-up">{children}</Link>
+);
+
+export default Navbar;

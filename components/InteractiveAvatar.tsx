@@ -27,9 +27,8 @@ import { startRecording, stopRecording } from "@/utils/audioRecording";
 import Image from "next/image";
 import clsx from "clsx";
 
-// Set the worker source
-GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+// Set the worker source for pdf
+GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
 
 interface InteractiveAvatarProps {
@@ -108,20 +107,16 @@ const InteractiveAvatar = ({ pdfContent }: InteractiveAvatarProps) => {
       try {
         // Fetch PDF as ArrayBuffer
         const response = await axios.get(pdfUrl, {
-          responseType: "arraybuffer", // This is crucial
+          responseType: "arraybuffer",
         });
-
-        console.log(response)
 
         // Initialize PDF.js
         const loadingTask = getDocument({
           data: new Uint8Array(response.data),
-          // For CORS issues, add:
-          // cMapUrl: "https://unpkg.com/pdfjs-dist@3.11.174/cmaps/",
-          // cMapPacked: true
         });
 
         const pdf = await loadingTask.promise;
+
         let text = "";
 
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -133,8 +128,7 @@ const InteractiveAvatar = ({ pdfContent }: InteractiveAvatarProps) => {
             .join(" ");
         }
 
-        console.log("Extracted text:", text);
-        // setPdfText(text);
+        setPdfText(text);
       } catch (err) {
         console.error("Failed to parse PDF:", err);
         setError("Failed to parse PDF");

@@ -27,8 +27,9 @@ export async function speakWithAvatar({
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to create talk: ${errorText}`);
+    const errorText = await response.json();
+    console.log(errorText);
+    throw new Error('Failed to create video due to insufficient credits');
   }
 
   const data = await response.json();

@@ -3,7 +3,7 @@ import Banner from "@/components/banner";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import VideoPlayer from "./_components/video-player";
+// import VideoPlayer from "./_components/video-player";
 import CourseEnrollButton from "./_components/course-enroll-button";
 import { Preview } from "@/components/preview";
 import { File } from "lucide-react";
@@ -40,7 +40,7 @@ const ChapterIdPage = async ({
   }
 
   const isLocked = !chapter.isFree && !purchase;
-  const completeOnEnd = !!purchase && !userProgress?.isCompleted;
+  // const completeOnEnd = !!purchase && !userProgress?.isCompleted;
 
   // If there's no playback ID, we should handle that case
   if (!muxData?.playbackId) {

@@ -1,4 +1,5 @@
 "use client";
+
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -68,7 +69,6 @@ const Navbar = () => {
     </motion.nav>
   );
 };
-
 
 // Add these at the bottom of your file
 const SignInButton = ({ children }: { children: React.ReactNode }) => (

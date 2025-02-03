@@ -55,7 +55,7 @@ const ChapterIdPage = async ({
         <div className="flex items-center justify-between">
           <div className="w-full">
             <Link
-              href={`/teacher/courses/${params.courseId}`}
+              href={`/dashboard/teacher/courses/${params.courseId}`}
               className="flex items-center gap-2 text-sm hover:opacity-75 transition mb-6"
             >
               <ArrowLeft />

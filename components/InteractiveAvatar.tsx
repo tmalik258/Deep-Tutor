@@ -315,13 +315,14 @@ const InteractiveAvatar = ({ pdfContent }: InteractiveAvatarProps) => {
               placeholder="Choose an avatar"
               selectedKeys={avatarId ? [avatarId] : []}
               onChange={(e) => setAvatarId(e.target.value)}
-              className="flex-1"
+              className="flex-1 bg-white pr-5"
               isDisabled={isLoading.presenters}
             >
               {presenters.map((presenter) => (
                 <SelectItem
                   key={presenter.presenter_id}
                   value={presenter.presenter_id}
+                  className="bg-white"
                 >
                   {presenter.name}
                 </SelectItem>
@@ -331,11 +332,11 @@ const InteractiveAvatar = ({ pdfContent }: InteractiveAvatarProps) => {
               placeholder="Choose a voice"
               selectedKeys={voiceId ? [voiceId] : []}
               onChange={(e) => setVoiceId(e.target.value)}
-              className="flex-1"
+              className="flex-1 bg-white"
               isDisabled={isLoading.voices}
             >
               {voices.map((voice) => (
-                <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                <SelectItem key={voice.voice_id} value={voice.voice_id} className="bg-white">
                   {voice.name}
                 </SelectItem>
               ))}

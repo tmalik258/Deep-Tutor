@@ -18,7 +18,7 @@ const ChapterIdPage = async ({
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/dashboard");
+    return redirect("/");
   }
 
   const {

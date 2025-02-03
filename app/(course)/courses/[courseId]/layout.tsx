@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import CourseSidebar from "./_components/course-sidebar";
 import CourseNavbar from "./_components/course-navbar";
+import { Suspense } from "react";
+import Loading from "./_components/loading";
 
 const CourseLayout = async ({
   children,
@@ -54,7 +56,9 @@ const CourseLayout = async ({
       <div className="hidden md:flex w-56 flex-col fixed inset-y-5 rounded-xl left-5 bg-white shadow-xl z-50">
         <CourseSidebar course={course} progressCount={progressCount} />
       </div>
-      <main className="md:pl-80 pt-[80px] h-full">{children}</main>
+      <main className="md:pl-[16.5rem] pr-5 pt-[90px] h-full">
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </main>
     </div>
   );
 };

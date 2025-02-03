@@ -69,16 +69,16 @@ export function DataTable<TData, TValue>({
 							.getColumn("title")
 							?.setFilterValue(event.target.value)
 					}
-					className="max-w-sm"
+					className="max-w-sm rounded-lg"
 				/>
-				<Link href={"/teacher/courses/create"}>
+				<Link href={"/dashboard/teacher/courses/create"}>
 					<Button>
 						<PlusCircle className="h-4 w-4 mr-2" />
 						New Course
 					</Button>
 				</Link>
 			</div>
-			<div className="rounded-md border">
+			<div className="rounded-xl bg-white shadow-xl">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (

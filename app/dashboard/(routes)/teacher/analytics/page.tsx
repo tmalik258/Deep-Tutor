@@ -8,7 +8,7 @@ const AnalyticsPage = async () => {
 	const { userId } = auth();
 
 	if (!userId) {
-		return redirect("/");
+		return redirect("/dashboard");
 	}
 
 	const { data, totalRevenue, totalSales } = await getAnalytics(userId);
@@ -19,7 +19,7 @@ const AnalyticsPage = async () => {
 				<DataCard label="Total Revenue" value={totalRevenue} />
 				<DataCard label="Total Sales" value={totalSales} />
 			</div>
-			<Chart data={data} />
+			<Chart data={data} /> 
 		</div>
 	);
 };

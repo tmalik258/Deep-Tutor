@@ -12,6 +12,10 @@ interface ChartProps {
 }
 
 const Chart = ({ data }: ChartProps) => {
+	if (!data || data.length === 0) {
+		return null;
+	}
+
 	return (
 		<Card>
 			<ResponsiveContainer width={"100%"} height={350}>

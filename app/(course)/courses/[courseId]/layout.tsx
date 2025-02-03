@@ -47,16 +47,16 @@ const CourseLayout = async ({
 	const progressCount = await getProgress(userId, course.id);
 
 	return (
-		<div className="h-full">
-			<div className="h-[80px] md:pl-80 fixed inset-y-0 w-full z-50">
-				<CourseNavbar course={course} progressCount={progressCount} />
-			</div>
-			<div className="hidden md:flex h-full w-80 flex-col fixed inset-y-0 z-50">
-				<CourseSidebar course={course} progressCount={progressCount} />
-			</div>
-			<main className="md:pl-80 pt-[80px] h-full">{children}</main>
-		</div>
-	);
+    <div className="bg-gradient-to-r from-violet-200 to-white min-h-screen">
+      <div className="h-[50px] left-[16.5rem] rounded-xl shadow-xl fixed top-5 right-5 bg-white inset-y-0 inset-x-16 z-50">
+        <CourseNavbar course={course} progressCount={progressCount} />
+      </div>
+      <div className="hidden md:flex w-56 flex-col fixed inset-y-5 rounded-xl left-5 bg-white shadow-xl z-50">
+        <CourseSidebar course={course} progressCount={progressCount} />
+      </div>
+      <main className="md:pl-80 pt-[80px] h-full">{children}</main>
+    </div>
+  );
 };
 
 export default CourseLayout;

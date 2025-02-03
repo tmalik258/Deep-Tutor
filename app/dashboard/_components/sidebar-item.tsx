@@ -18,7 +18,9 @@ const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
   const isActive =
     (pathname === "/dashboard" && href === "/dashboard") ||
     pathname === href ||
-    pathname?.includes(`${href}/`); 
+    pathname?.includes(`${href}/`);
+
+  // console.log(href)
     
 
   const onClick = () => {

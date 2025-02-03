@@ -49,13 +49,16 @@ export default function Dashboard() {
 
   // Early return for no userId
   if (!userId) {
-    return redirect("/");
+    return redirect("/dashboard");
   }
 
   // Render loading state or content
   if (isLoading) {
     return (
-      <div role="status" className="flex items-center justify-center h-[calc(100vh-4rem)]">
+      <div
+        role="status"
+        className="flex items-center justify-center h-[calc(100vh-4rem)]"
+      >
         <svg
           aria-hidden="true"
           className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

@@ -28,7 +28,7 @@ export const CourseSidebarItem = ({
 	const isActive = pathname?.includes(id);
 
 	const onClick = () => {
-		router.push(`/courses/${courseId}/chapters/${id}`);
+		router.push(`/dashboard/courses/${courseId}/chapters/${id}`);
 	};
 	return (
 		<button

@@ -51,7 +51,7 @@ const VideoPlayer = ({
 
 				if (nextChapterId) {
 					router.push(
-						`/courses/${courseId}/chapters/${nextChapterId}`
+						`/dashboard/courses/${courseId}/chapters/${nextChapterId}`
 					);
 				}
 			}

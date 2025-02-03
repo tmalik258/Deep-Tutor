@@ -6,47 +6,47 @@ import CourseSidebar from "./_components/course-sidebar";
 import CourseNavbar from "./_components/course-navbar";
 
 const CourseLayout = async ({
-	children,
-	params,
+  children,
+  params,
 }: {
-	children: React.ReactNode;
-	params: { courseId: string };
+  children: React.ReactNode;
+  params: { courseId: string };
 }) => {
-	const { userId } = auth();
-	if (!userId) {
-		return redirect("/");
-	}
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/dashboard");
+  }
 
-	const course = await db.course.findUnique({
-		where: {
-			id: params.courseId,
-		},
-		include: {
-			chapters: {
-				where: {
-					isPublished: true,
-				},
-				include: {
-					userProgress: {
-						where: {
-							userId,
-						},
-					},
-				},
-				orderBy: {
-					position: "asc",
-				},
-			},
-		},
-	});
+  const course = await db.course.findUnique({
+    where: {
+      id: params.courseId,
+    },
+    include: {
+      chapters: {
+        where: {
+          isPublished: true,
+        },
+        include: {
+          userProgress: {
+            where: {
+              userId,
+            },
+          },
+        },
+        orderBy: {
+          position: "asc",
+        },
+      },
+    },
+  });
 
-	if (!course) {
-		return redirect("/");
-	}
+  if (!course) {
+    return redirect("/dashboard");
+  }
 
-	const progressCount = await getProgress(userId, course.id);
+  const progressCount = await getProgress(userId, course.id);
 
-	return (
+  return (
     <div className="bg-gradient-to-r from-violet-200 to-white min-h-screen">
       <div className="h-[50px] left-[16.5rem] rounded-xl shadow-xl fixed top-5 right-5 bg-white inset-y-0 inset-x-16 z-50">
         <CourseNavbar course={course} progressCount={progressCount} />

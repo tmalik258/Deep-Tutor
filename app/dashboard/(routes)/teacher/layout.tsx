@@ -3,12 +3,12 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 const TeacherLayout = ({ children }: { children: React.ReactNode }) => {
-	const {userId} = auth();
+  const { userId } = auth();
 
-	if(!isTeacher(userId)) {
-		return redirect("/");
-	}
-	return <div>{children}</div>;
+  if (!isTeacher(userId)) {
+    return redirect("/dashboard");
+  }
+  return <div>{children}</div>;
 };
 
 export default TeacherLayout;

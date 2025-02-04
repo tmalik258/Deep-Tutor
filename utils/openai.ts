@@ -14,27 +14,30 @@ export async function transcribeAudio(audioBlob: Blob): Promise<string> {
   try {
     const base64Audio = await blobToBase64(audioBlob);
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    // Use a model that supports audio inputs
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     const response = await model.generateContent({
       contents: [
         {
           role: "user",
-          parts: [{ inlineData: { mimeType: "audio/wav", data: base64Audio } }],
+          parts: [
+            // Add text prompt
+            {
+              text: "Transcribe the following audio into text. Focus on accuracy and include all verbal elements:",
+            },
+            // Include audio data
+            { inlineData: { mimeType: "audio/wav", data: base64Audio } },
+          ],
         },
       ],
     });
 
-    // Ensure we call `text()` correctly
     const transcription = await response.response.text();
-
-    if (!transcription.trim())
-      throw new Error("No transcription received from Gemini API.");
-
     return transcription.trim();
   } catch (error) {
-    console.error("Error during Gemini audio transcription:", error);
-    throw new Error("Failed to transcribe audio using Gemini API.");
+    console.error("Error during transcription:", error);
+    throw new Error("Transcription failed. Please try again.");
   }
 }
 

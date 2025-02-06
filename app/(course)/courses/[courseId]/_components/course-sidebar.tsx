@@ -14,7 +14,6 @@ interface CourseSidebarProps {
 }
 
 const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
-  console.log(progressCount);
   const { userId } = auth();
 
   if (!userId) {

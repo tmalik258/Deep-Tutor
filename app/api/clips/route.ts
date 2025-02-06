@@ -24,6 +24,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error creating D-ID clip:", error);
+
+    // Handle timeout specifically
+    if (error instanceof Error && error.message.includes("Polling timed out")) {
+      return NextResponse.json(
+        {
+          error:
+            "Clip creation is taking longer than expected. Please try again later.",
+        },
+        { status: 504 } // Gateway Timeout
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to create D-ID clip" },
       { status: 500 }
@@ -87,10 +99,13 @@ async function createClip({
 
 async function pollClipStatus(
   clipId: string,
-  maxAttempts = 30,
-  interval = 1000
+  maxAttempts = 60,
+  interval = 2000
 ): Promise<{ status: string; error?: { message: string } }> {
+  
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    console.log(`Attempt ${attempt + 1}/${maxAttempts}`);
+
     const result = await checkClipStatus(clipId);
 
     if (result.status === "done") {

@@ -29,13 +29,13 @@ const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
       className={cn(
         "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-sky-300/20",
         isActive &&
-          "text-sky-700 bg-sky-400/15 hover:bg-sky-200/20 hover:text-sky-700"
+          "text-white bg-black hover:bg-sky-200/20 hover:text-sky-700"
       )}
     >
       <div className="flex items-center gap-x-2 py-4">
         <Icon
           size={22}
-          className={cn("text-slate-500", isActive && "text-sky-700")}
+          className={cn("text-slate-500", isActive && "text-white")}
         />
         {label}
       </div>
